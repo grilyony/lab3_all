@@ -1,4 +1,3 @@
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -23,6 +22,7 @@ public class Lab3Activity extends AppCompatActivity {
         final EditText cEditText = (EditText) findViewById(R.id.cEditText);
         final EditText dEditText = (EditText) findViewById(R.id.dEditText);
         final EditText yEditText = (EditText) findViewById(R.id.yEditText);
+        final EditText mutationEditText = (EditText) findViewById(R.id.mutationEditText);
 
         final TextView resTextView = (TextView) findViewById(R.id.resTextViewl3);
         Button calcButton = (Button) findViewById(R.id.calcButtonl3);
@@ -37,8 +37,9 @@ public class Lab3Activity extends AppCompatActivity {
                     int c = Integer.parseInt(cEditText.getText().toString());
                     int d = Integer.parseInt(dEditText.getText().toString());
                     int y = Integer.parseInt(yEditText.getText().toString());
+                    double mutationParam = Double.parseDouble(mutationEditText.getText().toString());
                     long start = System.nanoTime();
-                    int[] x1234 = findRoots(a, b, c, d, y);
+                    int[] x1234 = findRoots(a, b, c, d, y, mutationParam);
                     long execTimeMls = (System.nanoTime() - start) / 1_000_000;
                     resTextView.setText(
                             String.format("x1 = %d\nx2 = %d\nx3 = %d\nx4 = %d\nExecution time: %d ms",
@@ -94,7 +95,7 @@ public class Lab3Activity extends AppCompatActivity {
         }
         return child;
     }
-
+    
     private int[][] newPopulation(int[][] parentPairs, int[][] population) {
         int[][] newPopulation = new int[population.length][4];
         for (int i = 0; i < population.length; i++) {
@@ -102,7 +103,6 @@ public class Lab3Activity extends AppCompatActivity {
         }
         return newPopulation;
     }
-    
 
     private int[][] firstPopulation(int y) {
         int[][] firstPopulation = new int[2 + random.nextInt(y - 1)][4];
@@ -163,17 +163,16 @@ public class Lab3Activity extends AppCompatActivity {
         return mean;
     }
 
-    private void mutate(int[][] population, int y) {
-        double prob = 0.5;
+    private void mutate(int[][] population, int y, double mutationParam) {
         for (int i = 0; i < population.length; i++) {
             for (int j = 0; j < population[0].length; j++) {
                 double coin = random.nextDouble();
-                if (coin <= prob) population[i][j] = random.nextInt(y + 1);
+                if (coin <= mutationParam) population[i][j] = random.nextInt(y + 1);
             }
         }
     }
 
-    private int[] findRoots(int a, int b, int c, int d, int y) {
+    private int[] findRoots(int a, int b, int c, int d, int y, double mutationParam) {
         int[][] population = firstPopulation(y);
         int[] abcd = {a, b, c, d};
         int index;
@@ -189,7 +188,7 @@ public class Lab3Activity extends AppCompatActivity {
                 if (avgSurvivalOld < avgSurvivalNew) {
                     population = newPopulation;
                 } else {
-                    mutate(population, y);
+                    mutate(population, y, mutationParam);
                 }
             }
         }
