@@ -1,4 +1,3 @@
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -79,7 +78,8 @@ public class Lab2Activity extends AppCompatActivity {
                     String.format(
                             "Trained successfully!\n" +
                                     "w1 = %-6.3f w2 = %-6.3f\n" +
-                                    "Execution time: %d mcs", w1, w2, execTimeMcs
+                                    "Execution time: %d mcs" +
+                                    "\nIterations: %d", w1, w2, execTimeMcs, iterations
                     )
             );
 
